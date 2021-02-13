@@ -1,0 +1,34 @@
+{
+    "name": "kollmeier/contao-isotope-paypal-sdk",
+    "description": "Paypal SDK payment module for Contao Isotope Ecommerce",
+    "keywords": ["contao", "isotope", "payment", "paypal", "paypalplus", "paypap checkout"],
+    "type": "contao-bundle",
+    "homepage": "http://www.ckollmeier.de",
+    "license": "CC-BY-SA-4.0",
+    "authors":[
+        {
+            "name": "Carsten Kollmeier",
+            "homepage": "http://www.ckollmeier.de"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/kollmeier/contao-isotope-paypal-sdk/issues",
+        "source": "https://github.com/kollmeier/contao-isotope-paypal-sdk"
+    },
+    "require": {
+        "php": ">=7.1",
+        "contao/core-bundle": "^4.4",
+        "isotope/isotope-core": "^2.0",
+        "symfony/config": "^3.4 || ^4.0",
+        "symfony/dependency-injection": "^3.4.26 || ^4.1.12",
+        "symfony/http-kernel": "^3.4 || ^4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Kollmeier\\ContaoIsotopePaypalSDKBundle\\": "src/"
+        }
+    },
+    "extra": {
+        "contao-manager-plugin": "Kollmeier\\ContaoIsotopePaypalSDKBundle\\ContaoManagerPlugin"
+    }
+}
