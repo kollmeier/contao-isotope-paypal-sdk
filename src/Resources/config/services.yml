@@ -3,4 +3,4 @@ services:
         public: true
         tags:
             - { name: 'contao.callback', table: 'tl_iso_payment', target: 'fields.paypalSDKSandbox.load', priority: -2 }
-            - { name: 'contao.callback', table: 'tl_iso_payment', target: 'fields.paypalSDKNoSandbox.input_field', priority; -1 }
+            - { name: 'contao.callback', table: 'tl_iso_payment', target: 'fields.paypalSDKNoSandbox.input_field', priority: -1 }
