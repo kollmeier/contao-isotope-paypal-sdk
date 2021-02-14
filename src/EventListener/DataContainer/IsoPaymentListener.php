@@ -17,7 +17,7 @@ use Contao\DataContainer;
 
 class IsoPaymentListener {
 
-  public function onLoadCallback($value, DataContainer $dc);
+  public function onLoadCallback($value, DataContainer $dc) {
     dump($value,$dc);
   }
 
