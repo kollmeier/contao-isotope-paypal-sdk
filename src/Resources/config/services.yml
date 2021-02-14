@@ -1,0 +1,6 @@
+services:
+    Kollmeier\EventListener\DataContainer\IsoPaymentListener:
+        public: true
+        tags:
+            - { name: 'contao.callback', table: 'tl_iso_payment', target: 'fields.paypalSDKSandbox.load', priority: -2, method: 'onLoadCallback' }
+            - { name: 'contao.callback', table: 'tl_iso_payment', target: 'fields.paypalSDKNoSandbox.input_field', priority; -1, method: 'onFieldCallback' }

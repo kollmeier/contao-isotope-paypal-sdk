@@ -20,11 +20,16 @@ $GLOBALS['TL_DCA']['tl_iso_payment']['fields'] = array_merge($GLOBALS['TL_DCA'][
         'exclude' => true,
         'inputType' => 'checkbox',
         'load_callback' => static function($value,$dca) {
+          dump($value);
           return $value ?: 'paypalSDKNoSandbox';
         },
         'save_callback' => static function($value,$dca) {
+          dump($value);
           return $value === 'paypalSDKNoSandbox' ? '' : $value;
         },
+        'eval' => [
+          'submitOnChange' => true
+        ],
         'sql' => "int(1) NOT NULL default 0",
     ],
     'paypalSDKClientId' => [
@@ -61,6 +66,8 @@ $GLOBALS['TL_DCA']['tl_iso_payment']['fields'] = array_merge($GLOBALS['TL_DCA'][
  * Palettes
  */
 $GLOBALS['TL_DCA']['tl_iso_payment']['palettes']['paypal_sdk'] = $GLOBALS['TL_DCA']['tl_iso_payment']['palettes']['cash'];
+$GLOBALS['TL_DCA']['tl_iso_payment']['palettes']['__selector__'][] = 'paypalSDKSandbox';
+$GLOBALS['TL_DCA']['tl_iso_payment']['palettes']['__selector__'][] = 'paypalSDKNoSandbox';
 $GLOBALS['TL_DCA']['tl_iso_payment']['subpalettes']['paypalSDKNoSandbox'] = 'paypalSDKClientId,paypalSDKSecret';
 $GLOBALS['TL_DCA']['tl_iso_payment']['subpalettes']['paypalSDKSandbox'] = 'paypalSDKSBClientId,paypalSDKSBSecret';
 
