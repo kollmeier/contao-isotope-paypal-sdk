@@ -24,9 +24,8 @@ $GLOBALS['TL_DCA']['tl_iso_payment']['fields'] = array_merge($GLOBALS['TL_DCA'][
         },
         'save_callback' => static function($value,$dca) {
           return $value === 'paypalSDKNoSandbox' ? '' : $value;
-        }
-        'eval' => ['maxlength' => 255],
-        'sql' => "varchar(255) NOT NULL default ''",
+        },
+        'sql' => "int(1) NOT NULL default 0",
     ],
     'paypalSDKClientId' => [
         'label' => &$GLOBALS['TL_LANG']['tl_iso_payment']['paypalSDKClientId'],
