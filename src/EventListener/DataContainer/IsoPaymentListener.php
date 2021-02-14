@@ -21,7 +21,7 @@ class IsoPaymentListener {
     dump($value,$dc);
   }
 
-  public function onFieldCallback(DataContainer $dc, $label) {
+  public function onInputFieldCallback(DataContainer $dc, $label) {
     dump($dc,$label);
   }
 
