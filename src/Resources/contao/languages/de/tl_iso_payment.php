@@ -12,6 +12,12 @@ declare(strict_types=1);
  */
 
 $GLOBALS['TL_LANG']['tl_iso_payment'] = array_merge($GLOBALS['TL_LANG']['tl_iso_payment'], [
+    'paypalSDKSandbox' => ['Testsystem', 'Im Testsystem (Sandbox) ausführen'],
+    'paypalSDKNoSandbox' => ['Livesystem', 'Im Livesystem ausführen'],
+    'paypalSDKSandboxOptions' => [
+      'paypalSDKSandbox' => 'Testsystem',
+      'paypalSDKNoSandbox' => 'Livesystem'
+    ],
     'paypalSDKClientId' => ['Client ID', 'Ihre Client ID der Paypal API'],
     'paypalSDKSecret' => ['Secret', 'Ihr Secret der Paypal API'],
     'paypalSDKSBClientId' => ['Sandbox Client ID', 'Ihre Client ID der Paypal Sandbox API'],

@@ -15,22 +15,17 @@ declare(strict_types=1);
  * Fields
  */
 $GLOBALS['TL_DCA']['tl_iso_payment']['fields'] = array_merge($GLOBALS['TL_DCA']['tl_iso_payment']['fields'], [
-    'paypalSDKSandbox' => [
+    'paypalSDKIsSandbox' => [
         'label' => &$GLOBALS['TL_LANG']['tl_iso_payment']['paypalSDKSandbox'],
         'exclude' => true,
-        'inputType' => 'checkbox',
-        'load_callback' => static function($value,$dca) {
-          dump($value);
-          return $value ?: 'paypalSDKNoSandbox';
-        },
-        'save_callback' => static function($value,$dca) {
-          dump($value);
-          return $value === 'paypalSDKNoSandbox' ? '' : $value;
-        },
+        'inputType' => 'radio',
+        'options' => ['paypalSDKNoSandbox', 'paypalSDKSandbox'],
+        'reference' => &$GLOBALS['TL_LANG']['tl_iso_payment']['paypalSDKSandboxOptions'],
+        'default' => 'paypalSDKNoSandbox',
         'eval' => [
           'submitOnChange' => true
         ],
-        'sql' => "int(1) NOT NULL default 0",
+        'sql' => "varchar(20) NOT NULL default 'paypalSDKNoSandbox'",
     ],
     'paypalSDKClientId' => [
         'label' => &$GLOBALS['TL_LANG']['tl_iso_payment']['paypalSDKClientId'],
@@ -66,13 +61,12 @@ $GLOBALS['TL_DCA']['tl_iso_payment']['fields'] = array_merge($GLOBALS['TL_DCA'][
  * Palettes
  */
 $GLOBALS['TL_DCA']['tl_iso_payment']['palettes']['paypal_sdk'] = $GLOBALS['TL_DCA']['tl_iso_payment']['palettes']['cash'];
-$GLOBALS['TL_DCA']['tl_iso_payment']['palettes']['__selector__'][] = 'paypalSDKSandbox';
-$GLOBALS['TL_DCA']['tl_iso_payment']['palettes']['__selector__'][] = 'paypalSDKNoSandbox';
-$GLOBALS['TL_DCA']['tl_iso_payment']['subpalettes']['paypalSDKNoSandbox'] = 'paypalSDKClientId,paypalSDKSecret';
-$GLOBALS['TL_DCA']['tl_iso_payment']['subpalettes']['paypalSDKSandbox'] = 'paypalSDKSBClientId,paypalSDKSBSecret';
-
 \Contao\CoreBundle\DataContainer\PaletteManipulator::create()
     ->addLegend('gateway_legend', 'price_legend', \Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_BEFORE)
-    ->addField('paypalSDKSandbox','gateway_legend',\Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_APPEND)
+    ->addField('paypalSDKIsSandbox','gateway_legend',\Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_APPEND)
     ->applyToPalette('paypal_sdk', 'tl_iso_payment')
 ;
+
+$GLOBALS['TL_DCA']['tl_iso_payment']['palettes']['__selector__'][] = 'paypalSDKIsSandbox';
+$GLOBALS['TL_DCA']['tl_iso_payment']['subpalettes']['paypalSDKIsSandbox_paypalSDKSandbox'] = 'paypalSDKSBClientId, paypalSDKSBSecret';
+$GLOBALS['TL_DCA']['tl_iso_payment']['subpalettes']['paypalSDKIsSandbox_paypalSDKNoSandbox'] = 'paypalSDKClientId, paypalSDKSecret';
