@@ -6,5 +6,6 @@ services:
 #            - { name: 'contao.callback', table: 'tl_iso_payment', target: 'fields.paypalSDKIsSandbox.save', priority: -1 }
 #            - { name: 'contao.callback', table: 'tl_iso_payment', target: 'fields.paypalSDKNoSandbox.save' }
 #            - { name: 'contao.callback', table: 'tl_iso_payment', target: 'fields.paypalSDKNoSandbox.input_field' }
-    Kollmeier\ContaoIsotopePaypalSDKBundle\EventListener\HooksListener:
+
+    Kollmeier\ContaoIsotopePaypalSDKBundle\EventListener\ReplaceInsertTagsListener:
         public: true

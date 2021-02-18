@@ -14,6 +14,9 @@ declare(strict_types=1);
 /*
  * Fields
  */
+
+use Contao\CoreBundle\DataContainer\PaletteManipulator;
+
 $GLOBALS['TL_DCA']['tl_iso_payment']['fields'] = array_merge($GLOBALS['TL_DCA']['tl_iso_payment']['fields'], [
     'paypalSDKIsSandbox' => [
         'label' => &$GLOBALS['TL_LANG']['tl_iso_payment']['paypalSDKSandbox'],
@@ -61,9 +64,9 @@ $GLOBALS['TL_DCA']['tl_iso_payment']['fields'] = array_merge($GLOBALS['TL_DCA'][
  * Palettes
  */
 $GLOBALS['TL_DCA']['tl_iso_payment']['palettes']['paypal_sdk'] = $GLOBALS['TL_DCA']['tl_iso_payment']['palettes']['cash'];
-\Contao\CoreBundle\DataContainer\PaletteManipulator::create()
-    ->addLegend('gateway_legend', 'price_legend', \Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_BEFORE)
-    ->addField('paypalSDKIsSandbox','gateway_legend',\Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_APPEND)
+PaletteManipulator::create()
+    ->addLegend('gateway_legend', 'price_legend', PaletteManipulator::POSITION_BEFORE)
+    ->addField('paypalSDKIsSandbox','gateway_legend', PaletteManipulator::POSITION_APPEND)
     ->applyToPalette('paypal_sdk', 'tl_iso_payment')
 ;
 
