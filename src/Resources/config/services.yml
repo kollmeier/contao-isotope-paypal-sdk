@@ -8,7 +8,7 @@ services:
     # this creates a service per class whose id is the fully-qualified class name
     Kollmeier\ContaoIsotopePaypalSDKBundle\:
         resource: '../../*'
-        exclude: '../../{DependencyInjection,Entity,Tests,Kernel.php}'
+        exclude: '../../{Resources,DependencyInjection,Entity,Tests,Kernel.php}'
 
     Kollmeier\ContaoIsotopePaypalSDKBundle\Controller\:
         resource: '../../Controller/*'
