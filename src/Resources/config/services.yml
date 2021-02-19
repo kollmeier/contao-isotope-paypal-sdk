@@ -7,11 +7,11 @@ services:
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     Kollmeier\ContaoIsotopePaypalSDKBundle\:
-        resource: 'src/*'
-        exclude: 'src/{DependencyInjection,Entity,Tests,Kernel.php}'
+        resource: '../../*'
+        exclude: '../../{DependencyInjection,Entity,Tests,Kernel.php}'
 
     Kollmeier\ContaoIsotopePaypalSDKBundle\Controller\:
-        resource: 'src/Controller/*'
+        resource: '../../Controller/*'
         tags: [ controller.service_arguments ]
 
     Kollmeier\ContaoIsotopePaypalSDKBundle\EventListener\DataContainer\IsoPaymentListener:
