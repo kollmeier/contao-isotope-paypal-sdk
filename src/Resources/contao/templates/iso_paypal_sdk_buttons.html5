@@ -1,18 +1,21 @@
 <script src="https://www.paypal.com/sdk/js?client-id=<?= $this->clientId; ?>&currency=<?= $this->currency; ?><?php if ($this->disableFunding): ?>&disable-funding=<?= $this->disableFunding ?><?php endif; ?>"></script>
-
+<?php /** @var \Contao\FrontendTemplate $this */ ?>
+<?php dump($this); ?>
 <div id="paypal-button-container"></div>
 
 <!-- Add the checkout buttons, set up the order and approve the order -->
 <script>
     paypal.Buttons({
-        createOrder: function(data, actions) {
-            return actions.order.create({
-                purchase_units: [{
-                    amount: {
-                        value: '<?= $this->amount; ?>',
-                        currency_code: '<?= $this->currency; ?>'
-                    }
-                }]
+        createOrder: function() {
+            return fetch('<?php $this->route('paypal_sdk_api_createorder)',['name' => $this->name, 'moduleId' => 12]); ?>', {
+                method: 'post',
+                headers: {
+                    'content-type': 'application/json'
+                }
+            }).then(function(res) {
+                return res.json();
+            }).then(function(data) {
+                return data.id; // Use the key sent by your server's response, ex. 'id' or 'token'
             });
         },
         onApprove: function(data, actions) {

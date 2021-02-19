@@ -3,12 +3,10 @@
 namespace Kollmeier\ContaoIsotopePaypalSDKBundle\EventListener;
 
 use Contao\CoreBundle\ServiceAnnotation\Hook;
-use Contao\Database;
 use Contao\FrontendTemplate;
-use Contao\Model\Collection;
-use Contao\Template;
 use Isotope\Isotope;
 use Kollmeier\ContaoIsotopePaypalSDKBundle\Isotope\Model\Payment\Paypal;
+use Symfony\Component\Routing\Router;
 
 /**
  * Class ReplaceInsertTagsListener
