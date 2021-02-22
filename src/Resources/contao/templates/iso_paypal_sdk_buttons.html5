@@ -1,6 +1,5 @@
 <script src="https://www.paypal.com/sdk/js?client-id=<?= $this->clientId; ?>&currency=<?= $this->currency; ?><?php if ($this->disableFunding): ?>&disable-funding=<?= $this->disableFunding ?><?php endif; ?>"></script>
 <?php /** @var \Contao\FrontendTemplate $this */ ?>
-<?php dump($this); ?>
 <div id="paypal-button-container"></div>
 
 <!-- Add the checkout buttons, set up the order and approve the order -->
