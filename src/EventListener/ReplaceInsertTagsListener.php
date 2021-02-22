@@ -6,6 +6,7 @@ use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\FrontendTemplate;
 use Isotope\Isotope;
 use Kollmeier\ContaoIsotopePaypalSDKBundle\Isotope\Model\Payment\Paypal;
+use Kollmeier\ContaoIsotopePaypalSDKBundle\Resources\contao\models\PaypalSDKApiPageModel;
 use Symfony\Component\Routing\Router;
 
 /**
@@ -61,8 +62,24 @@ class ReplaceInsertTagsListener
             }
 
             $paypal = Paypal::findOneByName($p1);
+            $page = PaypalSDKApiPageModel::findOneByAlias($p1);
+            if (null === $page) {
+                if (null === $paypal) {
+                    return '';
+                }
+                $page = PaypalSDKApiPageModel::findOneByPayment($paypal->name);
+                if (null === $page) {
+                    return '';
+                }
+            }
             if (null === $paypal) {
-                return '';
+                if (null === $page) {
+                    return '';
+                }
+                $paypal = Paypal::findOneByName($page->payment);
+                if (null === $paypal) {
+                    return '';
+                }
             }
             $template = new FrontendTemplate($templateName);
 
@@ -70,6 +87,7 @@ class ReplaceInsertTagsListener
 
             $template->paypal = $paypal;
             $template->name = $paypal->name;
+            $template->page = $page;
             $template->clientId = $blnTesting ? $paypal->paypalSDKSBClientId : $paypal->paypalSDKClientId;
             $template->secret = $blnTesting ? $paypal->paypalSDKSBSecret : $paypal->paypalSDKSecret;
             $template->testing = $blnTesting;

@@ -11,8 +11,11 @@ services:
         exclude: '../../{Resources,DependencyInjection,Entity,Tests,Kernel.php}'
 
     Kollmeier\ContaoIsotopePaypalSDKBundle\Controller\:
-        resource: '../../Controller/*'
+        resource: '../../Controller'
         tags: [ controller.service_arguments ]
+
+    Kollmeier\ContaoIsotopePaypalSDKBundle\Controller\PaypalSDKApiController:
+        tags: [ controller.service_arguments, contao.page ]
 
     Kollmeier\ContaoIsotopePaypalSDKBundle\EventListener\DataContainer\IsoPaymentListener:
         public: true

@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
+use Kollmeier\ContaoIsotopePaypalSDKBundle\Isotope\Model\Payment\Paypal;
 
 $GLOBALS['TL_DCA']['tl_iso_payment']['fields'] = array_merge($GLOBALS['TL_DCA']['tl_iso_payment']['fields'], [
     'paypalSDKIsSandbox' => [
@@ -63,11 +64,11 @@ $GLOBALS['TL_DCA']['tl_iso_payment']['fields'] = array_merge($GLOBALS['TL_DCA'][
 /*
  * Palettes
  */
-$GLOBALS['TL_DCA']['tl_iso_payment']['palettes']['paypal_sdk'] = $GLOBALS['TL_DCA']['tl_iso_payment']['palettes']['cash'];
+$GLOBALS['TL_DCA']['tl_iso_payment']['palettes'][Paypal::TYPE] = $GLOBALS['TL_DCA']['tl_iso_payment']['palettes']['cash'];
 PaletteManipulator::create()
     ->addLegend('gateway_legend', 'price_legend', PaletteManipulator::POSITION_BEFORE)
     ->addField('paypalSDKIsSandbox','gateway_legend', PaletteManipulator::POSITION_APPEND)
-    ->applyToPalette('paypal_sdk', 'tl_iso_payment')
+    ->applyToPalette(Paypal::TYPE, 'tl_iso_payment')
 ;
 
 $GLOBALS['TL_DCA']['tl_iso_payment']['palettes']['__selector__'][] = 'paypalSDKIsSandbox';

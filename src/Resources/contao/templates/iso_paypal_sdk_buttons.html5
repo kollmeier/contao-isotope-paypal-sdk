@@ -7,7 +7,7 @@
 <script>
     paypal.Buttons({
         createOrder: function() {
-            return fetch('<?php $this->route('paypal_sdk_api_createorder)',['name' => $this->name, 'moduleId' => 12]); ?>', {
+            return fetch('<?= $this->route('paypal_sdk_api',['alias' => $this->page->alias, 'method' => 'createorder']); ?>', {
                 method: 'post',
                 headers: {
                     'content-type': 'application/json'
@@ -19,8 +19,14 @@
             });
         },
         onApprove: function(data, actions) {
-            return actions.order.capture().then(function(details) {
-                alert('Transaction completed by ' + details.payer.name.given_name);
+            console.log(data);
+            return fetch('<?= $this->route('paypal_sdk_api',['alias' => $this->page->alias, 'method' => 'getorder']); ?>?order_id='+data.orderID, {
+                headers: {
+                    'content-type': 'application/json'
+                }
+            }).then(function(res) {
+                return res.json();
+            }).then(function(details) {
             });
         }
     }).render('#paypal-button-container'); // Display payment options on your web page

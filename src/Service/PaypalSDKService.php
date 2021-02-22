@@ -3,11 +3,15 @@
 
 namespace Kollmeier\ContaoIsotopePaypalSDKBundle\Service;
 
+use Contao\Config;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageModel;
+use Contao\System;
 use Isotope\Isotope;
-use Isotope\Module\Cart;
+use Isotope\Model\ProductCollection\Order;
 use Isotope\Module\Checkout;
 use Kollmeier\ContaoIsotopePaypalSDKBundle\Isotope\Model\Payment\Paypal;
+use Kollmeier\ContaoIsotopePaypalSDKBundle\Resources\contao\models\PaypalSDKApiPageModel;
 use PayPalCheckoutSdk\Core\PayPalHttpClient;
 use PayPalCheckoutSdk\Core\ProductionEnvironment;
 use PayPalCheckoutSdk\Core\SandboxEnvironment;
@@ -42,7 +46,7 @@ class PaypalSDKService
         }
         $paypal = $this->getPaymentForName($name);
         if ($paypal) {
-            $sandbox = $paypal->paypalSDKIsSandbox === 'paypalSKDSandbox' || $paypal->debug;
+            $sandbox = $paypal->paypalSDKIsSandbox === 'paypalSDKSandbox' || $paypal->debug;
             if ($sandbox) {
                 $clientId = $paypal->paypalSDKSBClientId;
                 $secret = $paypal->paypalSDKSBSecret;
@@ -69,41 +73,93 @@ class PaypalSDKService
         return $this->clients[$name];
     }
 
-    public function buildRequestBody(string $name, int $moduleId): array {
-        $paypal = $this->getPaymentForName($name);
-        if (!$paypal) {
-            return [];
+    public function buildRequestBody(Order $order): array {
+
+        $successPage = \Environment::get('base') . Checkout::generateUrlForStep(Checkout::STEP_COMPLETE, $order);
+        $cancelPage = \Environment::get('base') . Checkout::generateUrlForStep(Checkout::STEP_FAILED);
+
+
+        $items = [];
+        foreach ($order->getItems() as $item) {
+            $row = [
+                'name'  => strip_tags($item->name),
+                'unit_amount' => [
+                    'currency_code' => $order->getCurrency(),
+                    'value' => number_format($item->getPrice(), 2)
+                ],
+                'quantity' => $item->quantity,
+            ];
+
+            if ($item->sku) {
+                $row['sku'] = $item->sku;
+            }
+
+            $items[] = $row;
         }
-        $cart =Isotope::getCart();
-        if (!$cart) {
-            return [];
+
+        $breakdown = [
+            'item_total' =>
+                array(
+                    'currency_code' => $order->getCurrency(),
+                    'value' => number_format($order->getSubtotal(), 2)
+                ),
+        ];
+        foreach ($order->getSurcharges() as $surcharge) {
+            if (!$surcharge->addToTotal) {
+                continue;
+            }
+
+
+            $breakdown[$surcharge->type] = [
+                'currency_code' => $order->getCurrency(),
+                'value' => number_format($surcharge->total_price, 2)
+            ];
         }
-        $checkout = new Checkout(\ModuleModel::findById($moduleId));
-        if (!$checkout) {
-            return [];
-        }
-        $successPage = PageModel::findById($checkout->orderCompleteJumpTo);
-        if (!$successPage) {
-            return [];
-        }
-        return array(
+
+        $billingAddress = $order->getBillingAddress();
+        $shippingAddress = $order->getShippingAddress() ?? $billingAddress;
+
+        $shop = Isotope::getConfig()->getLabel();
+
+        $data = array(
             'intent' => 'CAPTURE',
             'application_context' =>
                 array(
-                    'return_url' =>  $successPage->getAbsoluteUrl(),
-                    'cancel_url' => $successPage->getAbsoluteUrl('canceled=1')
+                    'user_action' => 'PAY_NOW',
+                    'brand_name' => $shop,
+                    'landingpage' => 'NO_PREFERENCE',
+                    'shipping preference' => 'GET_FROM_FILE',
+                    'return_url' =>  $successPage,
+                    'cancel_url' => $cancelPage
                 ),
             'purchase_units' =>
                 array(
                     0 =>
                         array(
+                            'reference_id' => $order->getUniqueId(),
                             'amount' =>
                                 array(
-                                    'currency_code' => $cart->getCurrency(),
-                                    'value' => $cart->getTotal()
-                                )
+                                    'currency_code' => $order->getCurrency(),
+                                    'value' => number_format($order->getTotal(), 2),
+                                    'breakdown' => $breakdown,
+                                ),
+                            'items' => $items,
+                            'shipping' =>
+                                array(
+                                    'method' => $order->getShippingMethod()->getLabel(),
+//                                    'address' =>
+//                                        array(
+//                                            'address_line_1'          => $shippingAddress->street_1,
+//                                            'address_line_2'          => $shippingAddress->street_2,
+//                                            'admin_area_2'           => $shippingAddress->city,
+//                                            'admin_area_1'          => $shippingAddress->subdivision,
+//                                            'postal_code'    => $shippingAddress->postal,
+//                                            'country_code'   => strtoupper($shippingAddress->country),
+//                                        ),
+                                ),
                         )
                 )
         );
+        return $data;
     }
 }
